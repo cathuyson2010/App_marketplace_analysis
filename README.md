@@ -26,12 +26,31 @@ This is the critical consistency fix: the raw dataset mentioned a GAME total of 
 
 ## Featured Charts
 
-The notebooks include the following visual analyses:
-- Top 10 categories by total installs
-- Mean vs. median installs by category
-- Top 10 categories by average rating, with app volume context
-- GAME install distribution using a log scale
-- Free vs. paid split in the GAME category
+The four charts below are generated directly by the notebooks and saved as PNG files in [`assets/`](assets/), so they are visible in GitHub and can be reproduced by rerunning the analysis.
+
+### 1. Market size by category
+
+![Top 10 categories by total installs](assets/top_10_categories_by_total_installs.png)
+
+GAME leads the cleaned dataset in total installs, confirming its enormous reach while also highlighting the scale of the competitive market.
+
+### 2. Mean versus median installs
+
+![Mean versus median installs by category](assets/mean_vs_median_installs_by_category.png)
+
+The large gap between mean and median in leading categories shows strong right-skew and winner-takes-most dynamics, which increases entry risk for startups.
+
+### 3. Average rating by category
+
+![Top 10 categories by average rating](assets/top_10_categories_by_average_rating.png)
+
+High average ratings make EDUCATION a more attractive candidate for a focused startup, especially when user satisfaction matters more than maximum scale.
+
+### 4. GAME install distribution
+
+![GAME install distribution on a log scale](assets/game_install_distribution_log_scale.png)
+
+The log-scale distribution shows that a small number of games capture very large install volumes while most games remain much smaller. This supports the recommendation to treat GAME as a high-reward, high-risk category.
 
 ## Key Business Insights
 
