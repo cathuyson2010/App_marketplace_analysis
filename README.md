@@ -1,86 +1,75 @@
 # Google Play Store App Analysis
 
-A comprehensive data analysis project examining the Google Play Store dataset to identify market opportunities, category performance, and app success metrics.
+This project studies the Google Play Store to understand category-level market opportunity, install concentration, and startup strategy. The analysis uses the cleaned dataset consistently throughout so that business conclusions reflect the final, validated data rather than the raw file.
 
-## Project Overview
+## Business Questions
 
-This analysis explores:
-- Overall market structure and dataset composition
-- App category ratings and user satisfaction patterns
-- Install distribution and market size by category
-- Detailed examination of top-performing categories
-- Strategic insights for app development decisions
+1. Which category dominates the market?
+2. Which category is safer for a startup?
+3. Which category is more suitable for a passive-income model?
 
-## Dataset
+## Final Decision on Data Quality
 
-- **Source**: Google Play Store
-- **Records**: 10,841 apps
-- **Features**: 13 columns including App name, Category, Rating, Reviews, Size, Installs, and more
+The analysis uses the cleaned dataset in all reporting and charts:
+- Duplicate apps were removed using the first valid app name entry.
+- The misaligned row at index 10472 was removed.
+- Ratings above 5.0 were rejected as invalid.
+- Missing ratings were removed because the rating-based analysis would otherwise be distorted.
+- Install counts were converted from strings to numeric values to support category-level growth and market-size analysis.
+
+This is the critical consistency fix: the raw dataset mentioned a GAME total of roughly 35 billion installs, but after cleaning the dataset, GAME is still the largest category by scale at about 13.88 billion installs. All final conclusions in this project follow the cleaned data.
+
+## Notebook Links
+
+- [notebooks/Reading_data_in_general.ipynb](notebooks/Reading_data_in_general.ipynb)
+- [notebooks/GAME.ipynb](notebooks/GAME.ipynb)
+
+## Featured Charts
+
+The notebooks include the following visual analyses:
+- Top 10 categories by total installs
+- Mean vs. median installs by category
+- Top 10 categories by average rating, with app volume context
+- GAME install distribution using a log scale
+- Free vs. paid split in the GAME category
+
+## Key Business Insights
+
+1. GAME remains the largest category in total market size, at roughly 13.88B installs after cleaning, but it is extremely competitive and highly skewed.
+2. COMMUNICATION has a higher average install count per app, which suggests strong network effects and monetization potential, but it is also more difficult for new entrants to break into.
+3. EDUCATION offers a safer startup path because it combines relatively high ratings with lower saturation than GAME and less extreme concentration than the top communication apps.
+
+## Final Recommendation
+
+For a startup, the best strategic path is not to chase the largest market alone. GAME offers massive scale, but it is winner-takes-most and requires a strong advantage in distribution, retention, or community. A more realistic and safer route is to build in EDUCATION or a productivity-style niche where user satisfaction is high, competition is more manageable, and the business can be more predictable.
+
+For a passive-income model, EDUCATION and utility-oriented categories are more feasible than a mass-market GAME launch because they usually require less constant customer acquisition pressure and can be built around repeat engagement, subscription value, or content-based monetization.
+
+## Dataset Summary
+
+- Source: Google Play Store app metadata
+- Final analysis dataset: cleaned Google Play Store export
+- Main variables: App, Category, Rating, Reviews, Installs, Price, Genres, and related performance metrics
 
 ## Project Structure
 
-```
+```text
 notebooks/
-├── Reading_data_in_general.ipynb  # Data loading and general exploration
-└── GAME.ipynb                      # GAME category deep-dive analysis
+├── Reading_data_in_general.ipynb  # Market overview, category analysis, and business conclusion
+└── GAME.ipynb                     # GAME-specific breakdown, genre analysis, and pricing model insights
 ```
-
-## Analysis Highlights
-
-### Data Overview
-The dataset contains comprehensive app information across multiple dimensions:
-- App ratings (0-5.0 scale)
-- User review counts
-- Installation numbers
-- App categories and genres
-- Pricing models (Free/Paid)
-- Content ratings and Android version requirements
-
-### GAME Category Analysis
-The GAME category analysis includes:
-- Top performing games with install metrics
-- Rating distributions and user engagement
-- App sizes and memory requirements
-- Popular game genres (Arcade, Casual, Action, Strategy, etc.)
-- Notable games: Subway Surfers (1B+ installs), Candy Crush Saga (500M+ installs), Clash Royale
-
-### Market Insights
-- **Game Market Leadership**: GAME category represents the largest market segment with 35 billion installs
-- **High-Volume Categories**: Communication (32.6B installs) and Productivity (14.2B installs) also show strong performance
-- **Quality Leaders**: Education, Books & Reference, and Personalization categories demonstrate highest average ratings
 
 ## How to Run
 
-### Prerequisites
 ```bash
-pip install pandas numpy jupyter
-```
-
-### Execute Analysis
-```bash
+pip install pandas matplotlib seaborn numpy jupyter
 jupyter notebook notebooks/Reading_data_in_general.ipynb
 jupyter notebook notebooks/GAME.ipynb
 ```
 
-## Data Processing
-
-The analysis includes:
-- Data validation and quality checks
-- Handling missing values (13.5% missing ratings)
-- Removal of anomalous ratings (>5.0)
-- String-to-numeric conversion for install counts
-- Category and genre standardization
-
-## Key Findings
-
-1. **Market Dominance**: The GAME category dominates in total installs but faces intense competition
-2. **Quality vs. Volume**: Education and Books categories offer quality alternatives with lower saturation
-3. **Install Variability**: Top games show massive installation bases while many apps have minimal adoption
-4. **Rating Consistency**: Most apps with sufficient reviews cluster around 4.0-4.5 ratings
-
 ## Author
 
-**cathuyson2010**
+cathuyson2010
 
 ## License
 
