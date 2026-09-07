@@ -1,95 +1,88 @@
-# Google Play Store App Analysis
+# Google Play Store App Marketplace Analysis
 
-This project studies the Google Play Store to understand category-level market opportunity, install concentration, and startup strategy. The analysis uses the cleaned dataset consistently throughout so that business conclusions reflect the final, validated data rather than the raw file.
+A reproducible Python + MySQL portfolio project examining category scale,
+typical adoption, ratings and install concentration in a cleaned app snapshot.
 
-## Business Questions
+## Business questions
 
-1. Which category dominates the market?
-2. Which category is safer for a startup?
-3. Which category is more suitable for a passive-income model?
+1. Which categories lead aggregate reported installs in this sample?
+2. How do typical installs and concentration differ across categories?
+3. How do Free/Paid games compare, and what can the data say about product opportunities?
 
-## Final Decision on Data Quality
+## At a glance
 
-The analysis uses the cleaned dataset in all reporting and charts:
-- Duplicate apps were removed using the first valid app name entry.
-- The misaligned row at index 10472 was removed.
-- Ratings above 5.0 were rejected as invalid.
-- Missing ratings were removed because the rating-based analysis would otherwise be distorted.
-- Install counts were converted from strings to numeric values to support category-level growth and market-size analysis.
+- **8,196 unique app names; 33 categories; 13 source fields.**
+- **12 analytical SQL queries:** JOINs, CTEs, subqueries and window functions.
+- Full CSV-to-MySQL field reconciliation before promoting the imported table.
+- Two executed notebooks, a four-panel dashboard and three CSV summary exports.
 
-This is the critical consistency fix: the raw dataset mentioned a GAME total of roughly 35 billion installs, but after cleaning the dataset, GAME is still the largest category by scale at about 13.88 billion installs. All final conclusions in this project follow the cleaned data.
+![Category opportunity dashboard](assets/portfolio_dashboard.png)
 
-## Notebook Links
+## Verified findings
 
-- [notebooks/Reading_data_in_general.ipynb](notebooks/Reading_data_in_general.ipynb)
-- [notebooks/GAME.ipynb](notebooks/GAME.ipynb)
+| Category | Apps | Total reported installs | Median installs | Top 3 share |
+|---|---:|---:|---:|---:|
+| GAME | 912 | 13,878,762,717 | 1,000,000 | 14.41% |
+| COMMUNICATION | 256 | 11,038,241,530 | 1,000,000 | 27.18% |
+| EDUCATION | 118 | 352,852,000 | 1,000,000 | 34.01% |
+| PERSONALIZATION | 298 | 1,532,352,930 | 100,000 | 19.58% |
 
-## Featured Charts
+GAME leads aggregate installs, but its mean (15.22M) is far above its median (1M).
+EDUCATION has a higher mean rating (4.364 versus GAME 4.247), yet its top-three
+install share is higher too. This does **not** establish a safer startup category.
+Within GAME, 836 Free apps average 4.236 in ratings; 76 Paid apps average 4.372.
+These are associations, not causal effects of price or evidence of profitability.
 
-The four charts below are generated directly by the notebooks and saved as PNG files in [`assets/`](assets/), so they are visible in GitHub and can be reproduced by rerunning the analysis.
+## Data and methodology
 
-### 1. Market size by category
+Input: the supplied Google Play Store CSV, containing 10,841 rows and 13 columns.
+The original download URL and data license are not recorded in the supplied files.
+Keep the first record for each app name, remove the misaligned record, reject invalid
+ratings and exclude missing ratings to reproduce the existing rated-app sample.
+Normalize numeric fields and lowercase column names. Deduplication uses app names
+because package IDs are absent; identical names may represent distinct products.
+Removing unrated apps is a scope choice and can bias install comparisons.
+Do not interpret cumulative install lower-bound buckets as exact downloads, active
+users, current growth, revenue or complete market size.
+The data lacks acquisition cost, retention, maintenance cost and real revenue.
+Startup safety and passive income remain research questions, not proven conclusions.
 
-![Top 10 categories by total installs](assets/top_10_categories_by_total_installs.png)
+## Run the Python workflow
 
-GAME leads the cleaned dataset in total installs, confirming its enormous reach while also highlighting the scale of the competitive market.
-
-### 2. Mean versus median installs
-
-![Mean versus median installs by category](assets/mean_vs_median_installs_by_category.png)
-
-The large gap between mean and median in leading categories shows strong right-skew and winner-takes-most dynamics, which increases entry risk for startups.
-
-### 3. Average rating by category
-
-![Top 10 categories by average rating](assets/top_10_categories_by_average_rating.png)
-
-High average ratings make EDUCATION a more attractive candidate for a focused startup, especially when user satisfaction matters more than maximum scale.
-
-### 4. GAME install distribution
-
-![GAME install distribution on a log scale](assets/game_install_distribution_log_scale.png)
-
-The log-scale distribution shows that a small number of games capture very large install volumes while most games remain much smaller. This supports the recommendation to treat GAME as a high-reward, high-risk category.
-
-## Key Business Insights
-
-1. GAME remains the largest category in total market size, at roughly 13.88B installs after cleaning, but it is extremely competitive and highly skewed.
-2. COMMUNICATION has a higher average install count per app, which suggests strong network effects and monetization potential, but it is also more difficult for new entrants to break into.
-3. EDUCATION offers a safer startup path because it combines relatively high ratings with lower saturation than GAME and less extreme concentration than the top communication apps.
-
-## Final Recommendation
-
-For a startup, the best strategic path is not to chase the largest market alone. GAME offers massive scale, but it is winner-takes-most and requires a strong advantage in distribution, retention, or community. A more realistic and safer route is to build in EDUCATION or a productivity-style niche where user satisfaction is high, competition is more manageable, and the business can be more predictable.
-
-For a passive-income model, EDUCATION and utility-oriented categories are more feasible than a mass-market GAME launch because they usually require less constant customer acquisition pressure and can be built around repeat engagement, subscription value, or content-based monetization.
-
-## Dataset Summary
-
-- Source: Google Play Store app metadata
-- Final analysis dataset: cleaned Google Play Store export
-- Main variables: App, Category, Rating, Reviews, Installs, Price, Genres, and related performance metrics
-
-## Project Structure
-
-```text
-notebooks/
-├── Reading_data_in_general.ipynb  # Market overview, category analysis, and business conclusion
-└── GAME.ipynb                     # GAME-specific breakdown, genre analysis, and pricing model insights
-```
-
-## How to Run
-
+From the repository root, create/activate a Python environment and install:
 ```bash
-pip install pandas matplotlib seaborn numpy jupyter
-jupyter notebook notebooks/Reading_data_in_general.ipynb
-jupyter notebook notebooks/GAME.ipynb
+pip install -r requirements.txt
+jupyter nbconvert --to notebook --execute --inplace notebooks/Reading_data_in_general.ipynb notebooks/GAME.ipynb
+python scripts/build_portfolio_report.py
 ```
+The overview notebook exports the cleaned CSV; GAME reads that same file.
+Both notebooks discover the project root and can run from the root or notebooks folder.
+The report script regenerates the dashboard and all three summary CSV files.
+
+## Run the SQL workflow
+
+See [sql/README.md](sql/README.md) for saved-login setup and reproducible import.
+Execute sql/01_create_database.sql, run python sql/import_cleaned.py,
+then execute sql/02_data_validation.sql and sql/03_business_analysis.sql.
+The importer checks every source field before an atomic rename and retains the old table.
+
+## Explore the evidence
+
+- [Market overview notebook](notebooks/Reading_data_in_general.ipynb)
+- [GAME notebook](notebooks/GAME.ipynb)
+- [SQL questions](sql/03_business_analysis.sql)
+- [Category results](reports/category_summary.csv)
+- [GAME Free/Paid results](reports/game_free_paid.csv)
+- [GAME genre results](reports/game_genres.csv)
+- [Executive summary](reports/executive_summary.md)
+
+## Validation
+
+Both notebooks execute successfully from a fresh kernel in the project environment.
+All 12 SQL queries run on MySQL 8.0.46. The verified import contains 8,196 rows,
+33 categories and 912 GAME apps. The previous incomplete 317-row SQL table is retained.
+The original import failure trigger is unknown; the diagnosed issue was incomplete loading.
 
 ## Author
 
-cathuyson2010
-
-## License
-
-This project is open source and available under the MIT License.
+Huy Son Cat / cathuyson2010
